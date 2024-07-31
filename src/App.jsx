@@ -5,6 +5,7 @@ import { useFetchNews } from "./hooks/useFetchNews";
 import { useState } from "react";
 import { useDebounce } from "./hooks/useDebounce";
 import { useEffect } from "react";
+import { SOURCES } from "./constants";
 
 const INITIAL_FORM_VALUES = {
   keyword: null,
@@ -18,7 +19,6 @@ const styles = {
 };
 
 function App() {
-  const [messageApi, contextHolder] = message.useMessage();
   const [formValues, setFormValues] = useState(INITIAL_FORM_VALUES);
 
   const handleInputChange = (name, value) => {
@@ -40,66 +40,78 @@ function App() {
   useEffect(() => {
     const sourceFromLocalStorage = window.localStorage.getItem("source");
     const categoryFromLocalStorage = window.localStorage.getItem("category");
+
     setFormValues((prevState) => ({
       ...prevState,
-      source: sourceFromLocalStorage,
-      category: categoryFromLocalStorage,
+      source:
+        sourceFromLocalStorage !== "undefined"
+          ? sourceFromLocalStorage
+          : SOURCES.theGuardian,
+      category:
+        categoryFromLocalStorage !== "undefined"
+          ? categoryFromLocalStorage
+          : "News",
     }));
   }, []);
 
   const debouncedKeyword = useDebounce(formValues.keyword, 1000);
 
-  const { data: news, isLoading } = useFetchNews({
+  const {
+    data: news,
+    isLoading,
+    error,
+  } = useFetchNews({
     keyword: debouncedKeyword,
     date: formValues.date,
     category: formValues.category,
     source: formValues.source,
   });
 
+  if (error) {
+    message.error("Something went wrong.");
+  }
+
   return (
-    <>
-      {contextHolder}
-      <Row>
-        <Col xs={{ span: 20, offset: 2 }} md={{ span: 16, offset: 4 }}>
-          <SearchBar
-            handleInputChange={handleInputChange}
-            onDateChange={onDateChange}
-            onSelectChange={onSelectChange}
-            categoryOptions={getCategoryOptions(news)}
-            news={news}
-            formValues={formValues}
-          />
-          <Spin
-            spinning={isLoading}
-            tip="Loading..."
-            size="large"
-            style={styles.spinnerContainer}>
-            <Row gutter={[24, 24]}>
-              {!news.length && !isLoading ? (
-                <Col span={24}>
-                  <Result
-                    title="No data found with this search and filter."
-                    subTitle="Try with different keywords, date, category, source"
-                  />
-                </Col>
-              ) : (
-                news.map((news, idx) => {
-                  return (
-                    <Col
-                      xs={{ span: 24 }}
-                      lg={{ span: 12 }}
-                      xl={{ span: 8 }}
-                      key={idx}>
-                      <NewsCard news={news} isLoading={isLoading} />
-                    </Col>
-                  );
-                })
-              )}
-            </Row>
-          </Spin>
-        </Col>
-      </Row>
-    </>
+    <Row>
+      <Col xs={{ span: 20, offset: 2 }} md={{ span: 16, offset: 4 }}>
+        <SearchBar
+          handleInputChange={handleInputChange}
+          onDateChange={onDateChange}
+          onSelectChange={onSelectChange}
+          categoryOptions={getCategoryOptions(news)}
+          news={news}
+          formValues={formValues}
+        />
+        <Spin
+          spinning={isLoading}
+          tip="Loading..."
+          size="large"
+          style={styles.spinnerContainer}>
+          <Row gutter={[24, 24]}>
+            {!news.length && !isLoading ? (
+              <Col span={24}>
+                <Result
+                  title="No data found with this search and filter."
+                  subTitle="Try with different keywords, date, category, source"
+                />
+              </Col>
+            ) : (
+              news.map((news, idx) => {
+                return (
+                  <Col
+                    xs={{ span: 24 }}
+                    lg={{ span: 12 }}
+                    xl={{ span: 8 }}
+                    key={idx}>
+                    <NewsCard news={news} isLoading={isLoading} />
+                  </Col>
+                );
+              })
+            )}
+          </Row>
+        </Spin>
+      </Col>
+    </Row>
   );
 }
 
