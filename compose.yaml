@@ -9,3 +9,5 @@ services:
     volumes:
       - "/app/node_modules"
       - "./:/app"
+    env_file:
+      - .env
