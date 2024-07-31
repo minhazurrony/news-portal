@@ -1,103 +1,11 @@
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import dayjs from "dayjs";
 import { SOURCES } from "../constants";
+import { formatDate } from "../utils/formatDate";
+import { getBbcNews, getGuardianNews, getNewYorkTimesNews } from "../services";
 
 export const useFetchNews = ({ keyword, date, category, source }) => {
   const [newsData, setNewsData] = useState([]);
-
-  const getBbcNews = async () => {
-    try {
-      const params = {
-        apiKey: import.meta.env.VITE_NEWS_API_KEY,
-        sources: "bbc-news",
-        q: keyword,
-      };
-
-      const res = await axios.get(`https://newsapi.org/v2/everything`, {
-        params,
-      });
-
-      const data = res?.data?.articles;
-
-      const formattedData = data?.map((item) => ({
-        title: item?.title,
-        thumbnail: item?.urlToImage,
-        url: item?.url,
-        publishedAt: dayjs(item?.publishedAt).format("YYYY-MM-DD"),
-        category: "Uncategorized",
-        source: "BBC News",
-      }));
-
-      return formattedData;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
-
-  const getGuardianNews = async () => {
-    try {
-      const params = {
-        "api-key": import.meta.env.VITE_GUARDIAN_API_KEY,
-        "show-fields": "publication,thumbnail",
-        q: keyword,
-      };
-      const res = await axios.get(`https://content.guardianapis.com/search`, {
-        params,
-      });
-
-      const data = res?.data?.response?.results;
-
-      const formattedData = data?.map((item) => ({
-        title: item?.webTitle,
-        thumbnail: item?.fields?.thumbnail,
-        url: item?.webUrl,
-        publishedAt: dayjs(item?.webPublicationDate).format("YYYY-MM-DD"),
-        category: item?.pillarName || "Uncategorized", // Adjust category here
-        source: "The Guardian",
-      }));
-
-      return formattedData;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
-
-  const getNewYorkTimesNews = async () => {
-    try {
-      const params = {
-        "api-key": import.meta.env.VITE_NEW_YORK_TIMES_API_KEY,
-        sort: "newest",
-        q: keyword,
-      };
-
-      const res = await axios.get(
-        `https://api.nytimes.com/svc/search/v2/articlesearch.json`,
-        { params }
-      );
-
-      const data = res?.data?.response?.docs;
-
-      const formattedData = data?.map((item) => ({
-        title: item?.headline.main,
-        thumbnail: item?.multimedia?.[0]?.url
-          ? `https://www.nytimes.com/${item.multimedia[0].url}`
-          : null,
-        url: item?.web_url,
-        publishedAt: dayjs(item?.pub_date).format("YYYY-MM-DD"),
-        category: item?.type_of_material || "Uncategorized", // Adjust category here
-        source: "New York Times",
-      }));
-
-      return formattedData;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
 
   const {
     data: guardianNewsData,
@@ -145,10 +53,6 @@ export const useFetchNews = ({ keyword, date, category, source }) => {
     newYorkTimesData,
     bbcNewsData,
   ]);
-
-  const formatDate = (date) => {
-    return date ? dayjs(date).format("YYYY-MM-DD") : null;
-  };
 
   const filteredData = useMemo(() => {
     if (!category && !source && !date) {
