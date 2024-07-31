@@ -57,7 +57,8 @@ function App() {
   const debouncedKeyword = useDebounce(formValues.keyword, 1000);
 
   const {
-    data: news,
+    filteredData: news,
+    data: allNewsData,
     isLoading,
     error,
   } = useFetchNews({
@@ -78,8 +79,7 @@ function App() {
           handleInputChange={handleInputChange}
           onDateChange={onDateChange}
           onSelectChange={onSelectChange}
-          categoryOptions={getCategoryOptions(news)}
-          news={news}
+          categoryOptions={getCategoryOptions(allNewsData)}
           formValues={formValues}
         />
         <Spin

@@ -168,7 +168,8 @@ export const useFetchNews = ({ keyword, date, category, source }) => {
   }, [newsData, category, source, date]);
 
   return {
-    data: filteredData,
+    filteredData: filteredData,
+    data: newsData,
     isLoading:
       isGuardianNewsLoading || isNewYorkTimesLoading || isBbcNewsLoading,
     error: guardianNewsError || newYorkTimesError || bbcNewsError,
