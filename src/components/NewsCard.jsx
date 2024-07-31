@@ -15,6 +15,7 @@ export const NewsCard = ({ news, isLoading }) => {
     <Card
       loading={isLoading}
       style={styles.card}
+      hoverable={true}
       cover={
         <img alt="news-image" src={news?.thumbnail} style={styles.cardImage} />
       }>
