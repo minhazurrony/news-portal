@@ -15,6 +15,7 @@ const INITIAL_FORM_VALUES = {
 };
 
 const styles = {
+  mainContainer: { paddingBottom: 32 },
   spinnerContainer: { minHeight: "50vh" },
 };
 
@@ -75,7 +76,7 @@ function App() {
   }
 
   return (
-    <Row>
+    <Row style={styles.mainContainer}>
       <Col xs={{ span: 20, offset: 2 }} md={{ span: 16, offset: 4 }}>
         <SearchBar
           handleInputChange={handleInputChange}
