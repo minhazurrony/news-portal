@@ -44,11 +44,13 @@ function App() {
     setFormValues((prevState) => ({
       ...prevState,
       source:
-        sourceFromLocalStorage !== "undefined"
+        sourceFromLocalStorage !== "undefined" &&
+        sourceFromLocalStorage !== null
           ? sourceFromLocalStorage
           : SOURCES.theGuardian,
       category:
-        categoryFromLocalStorage !== "undefined"
+        categoryFromLocalStorage !== "undefined" &&
+        categoryFromLocalStorage !== null
           ? categoryFromLocalStorage
           : "News",
     }));
