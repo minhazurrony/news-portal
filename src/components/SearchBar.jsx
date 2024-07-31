@@ -1,14 +1,14 @@
 import React from "react";
 import { SOURCE_OPTIONS } from "../constants";
-import { DatePicker, Form, Input, Select } from "antd";
+import { DatePicker, Input, Select, Row, Col } from "antd";
 import dayjs from "dayjs";
 
 const styles = {
   form: {
     margin: "32px 0",
   },
-  searchField: { width: 250 },
-  otherFields: { width: 180 },
+  searchField: { width: "100%" },
+  otherFields: { width: "100%" },
 };
 
 export const SearchBar = ({
@@ -19,8 +19,8 @@ export const SearchBar = ({
   formValues,
 }) => {
   return (
-    <Form name="search_bar" layout="inline" style={styles.form}>
-      <Form.Item>
+    <Row gutter={[16, 16]} style={styles.form}>
+      <Col xs={{ span: 24 }} md={{ span: 12 }} xl={{ span: 6 }}>
         <Input
           value={formValues.keyword}
           name="keyword"
@@ -29,8 +29,8 @@ export const SearchBar = ({
           style={styles.searchField}
           onChange={(e) => handleInputChange("keyword", e.target.value)}
         />
-      </Form.Item>
-      <Form.Item>
+      </Col>
+      <Col xs={{ span: 24 }} md={{ span: 12 }} xl={{ span: 6 }}>
         <DatePicker
           name="date"
           value={formValues.date ? dayjs(formValues.date, "YYYY-MM-DD") : null}
@@ -40,8 +40,8 @@ export const SearchBar = ({
           onChange={onDateChange}
           maxDate={dayjs()}
         />
-      </Form.Item>
-      <Form.Item>
+      </Col>
+      <Col xs={{ span: 24 }} md={{ span: 12 }} xl={{ span: 6 }}>
         <Select
           name="category"
           value={formValues.category}
@@ -52,8 +52,8 @@ export const SearchBar = ({
           size="large"
           onChange={(value) => onSelectChange("category", value)}
         />
-      </Form.Item>
-      <Form.Item>
+      </Col>
+      <Col xs={{ span: 24 }} md={{ span: 12 }} xl={{ span: 6 }}>
         <Select
           name="source"
           value={formValues.source}
@@ -64,7 +64,7 @@ export const SearchBar = ({
           size="large"
           onChange={(value) => onSelectChange("source", value)}
         />
-      </Form.Item>
-    </Form>
+      </Col>
+    </Row>
   );
 };

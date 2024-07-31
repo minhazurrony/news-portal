@@ -60,7 +60,7 @@ function App() {
     <>
       {contextHolder}
       <Row>
-        <Col span={16} offset={4}>
+        <Col xs={{ span: 20, offset: 2 }} md={{ span: 16, offset: 4 }}>
           <SearchBar
             handleInputChange={handleInputChange}
             onDateChange={onDateChange}
@@ -85,7 +85,11 @@ function App() {
               ) : (
                 news.map((news, idx) => {
                   return (
-                    <Col span={8} key={idx}>
+                    <Col
+                      xs={{ span: 24 }}
+                      lg={{ span: 12 }}
+                      xl={{ span: 8 }}
+                      key={idx}>
                       <NewsCard news={news} isLoading={isLoading} />
                     </Col>
                   );
